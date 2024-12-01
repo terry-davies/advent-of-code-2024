@@ -23,7 +23,6 @@ async function main() {
     listTwoCount[second] = (listTwoCount[second] || 0) + 1;
   }
 
-  // Solve part 1
   solvePart1(idListOne, idListTwo);
   solvePart2(idListOne, listTwoCount);
 }
