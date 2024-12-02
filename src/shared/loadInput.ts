@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import readline from 'readline';
 
-export async function loadCsv(filePath: string) {
+export async function loadInput(filePath: string) {
   const absolutePath = path.resolve(filePath);
 
   const fileStream = fs.createReadStream(absolutePath);

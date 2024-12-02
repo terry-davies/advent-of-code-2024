@@ -1,14 +1,14 @@
 import path from 'path';
-import { loadCsv } from '@shared/loadCsv';
+import { loadInput } from '@shared/loadInput';
 
-const filePath = 'input.csv';
+const filePath = 'input.txt';
 
 async function main() {
   console.log('Hello, Day 1!');
 
   const relativePath = path.resolve(__dirname, filePath);
 
-  const input = await loadCsv(relativePath);
+  const input = await loadInput(relativePath);
 
   let idListOne: number[] = [];
   let idListTwo: number[] = [];
