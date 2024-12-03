@@ -1,5 +1,5 @@
 import path from 'path';
-import { loadInput } from '@shared/loadInput';
+import { fetchInputStream } from '@shared/loadInput';
 import { validateLine } from './validateLine';
 
 const filePath = 'input.txt';
@@ -9,7 +9,7 @@ async function main() {
 
   const relativePath = path.resolve(__dirname, filePath);
 
-  const input = await loadInput(relativePath);
+  const input = await fetchInputStream(relativePath);
 
   let countPart1 = 0;
   let countPart2 = 0;
