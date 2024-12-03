@@ -1,60 +1,29 @@
-import { ByteLengthQueuingStrategy } from 'stream/web';
-
-export function validateLine(line: string): boolean {
-  const report = line.split(/\s+/).map(Number);
-
-  let result = true;
-  let order: 'asc' | 'desc' | null = null;
-
-  while (true) {
-    const first = report.shift();
-
-    if (first === undefined) {
-      break;
+export function validateLine(report: number[]): boolean {
+  const isDiffValid = report.every((value, index) => {
+    if (index === 0) {
+      return true;
     }
 
-    if (report.length === 0) {
-      break;
+    const diff = Math.abs(report[index] - report[index - 1]);
+
+    return diff >= 1 && diff <= 3;
+  });
+
+  const isOrderValidAsc = report.every((value, index) => {
+    if (index === 0) {
+      return true;
     }
 
-    if (first === report[0]) {
-      result = false;
-      break;
+    return report[index] > report[index - 1];
+  });
+
+  const isOrderValidDesc = report.every((value, index) => {
+    if (index === 0) {
+      return true;
     }
 
-    if (order === null) {
-      if (first < report[0]) {
-        order = 'asc';
-      } else {
-        order = 'desc';
-      }
-    }
+    return report[index] < report[index - 1];
+  });
 
-    if (order === 'asc') {
-      if (first > report[0]) {
-        result = false;
-        break;
-      }
-    }
-
-    if (order === 'desc') {
-      if (first < report[0]) {
-        result = false;
-        break;
-      }
-    }
-
-    if (!comparePair(first, report[0])) {
-      result = false;
-      break;
-    }
-  }
-
-  return result;
-}
-
-function comparePair(first: number, last: number): boolean {
-  const diff = Math.abs(first - last);
-
-  return diff >= 1 && diff <= 3;
+  return isDiffValid && (isOrderValidAsc || isOrderValidDesc);
 }

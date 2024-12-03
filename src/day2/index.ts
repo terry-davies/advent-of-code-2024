@@ -11,19 +11,44 @@ async function main() {
 
   const input = await loadInput(relativePath);
 
-  let count = 0;
+  let countPart1 = 0;
+  let countPart2 = 0;
+
+  const unsafe: number[][] = [];
 
   for await (const line of input) {
-    const status = validateLine(line);
+    const report = line.split(/\s+/).map(Number);
+    const statusPart1 = validateLine(report);
 
-    console.log('Line:', line, 'Status:', status);
+    if (!statusPart1) {
+      unsafe.push(report);
+    }
 
-    if (status) {
-      count++;
+    if (statusPart1) {
+      countPart1++;
     }
   }
 
-  console.log('Result:', count);
+  for (let i = 0; i < unsafe.length; i++) {
+    //console.log('unsafe:', unsafe[i]);
+    const isSafe = unsafe[i].some((number, index) => {
+      const modifiedReport = [
+        ...unsafe[i].slice(0, index),
+        ...unsafe[i].slice(index + 1),
+      ];
+
+      const isModifiedSafe = validateLine(modifiedReport);
+
+      return isModifiedSafe;
+    });
+
+    if (isSafe) {
+      countPart2++;
+    }
+  }
+
+  console.log('Result Part 1:', countPart1);
+  console.log('Result Part 2:', countPart2 + countPart1);
 }
 
 main();
