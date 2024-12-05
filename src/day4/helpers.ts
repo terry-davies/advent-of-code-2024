@@ -15,7 +15,7 @@ const directions = [
   [1, -1], // Diagonal down-left
 ];
 
-export function processString(input: string): number {
+export function processStringPart1(input: string): number {
   const grid = input.split('\n').map((row) => row.split(''));
   let count = 0;
 
@@ -25,6 +25,23 @@ export function processString(input: string): number {
 
       if (cell === 'X') {
         count += checkForWord(grid, [row, column]);
+      }
+    }
+  }
+
+  return count;
+}
+
+export function processStringPart2(input: string): number {
+  const grid = input.split('\n').map((row) => row.split(''));
+  let count = 0;
+
+  for (let row = 0; row < grid.length; row++) {
+    for (let column = 0; column < grid[row].length; column++) {
+      const cell = grid[row][column];
+
+      if (cell === 'A' && checkForXMas(grid, [row, column])) {
+        count++;
       }
     }
   }
@@ -69,4 +86,36 @@ function checkForWord(grid: string[][], cell: [number, number]): number {
   }
 
   return count;
+}
+
+function checkForXMas(grid: string[][], cell: [number, number]): boolean {
+  const directions = [
+    [-1, 1], // Diagonal up-right
+    [1, -1], // Diagonal down-left
+    [-1, -1], // Diagonal up-left
+    [1, 1], // Diagonal down-right
+  ];
+
+  const xCells = directions.map((direction) => {
+    const cellToCheck = [direction[0] + cell[0], direction[1] + cell[1]];
+
+    if (
+      cellToCheck[0] < 0 ||
+      cellToCheck[1] < 0 ||
+      cellToCheck[0] >= grid.length ||
+      cellToCheck[1] >= grid[0].length
+    ) {
+      return null;
+    }
+
+    return grid[cellToCheck[0]][cellToCheck[1]];
+  });
+
+  return (
+    xCells.every((cell) => cell === 'M' || cell === 'S') &&
+    xCells.some((cell) => cell === 'M') &&
+    xCells.some((cell) => cell === 'S') &&
+    xCells[0] !== xCells[1] &&
+    xCells[2] !== xCells[3]
+  );
 }
