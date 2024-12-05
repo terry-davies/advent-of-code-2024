@@ -1,4 +1,7 @@
-export function processStringPart1(input: string): number {
+export function processStringPart1(input: string): {
+  totalPart1: number;
+  totalPart2: number;
+} {
   const [orderRulesString, pagesString] = input.split('\n\n');
 
   const orderRules = orderRulesString
@@ -21,7 +24,9 @@ export function processStringPart1(input: string): number {
     .split('\n')
     .map((page) => page.split(',').map(Number));
 
-  let total = 0;
+  let totalPart1 = 0;
+
+  const incorrectEntries = [];
 
   for (const page of pages) {
     const tempPage = [...page];
@@ -46,9 +51,28 @@ export function processStringPart1(input: string): number {
     }
 
     if (isValid) {
-      total += tempPage[(tempPage.length - 1) / 2];
+      totalPart1 += tempPage[(tempPage.length - 1) / 2];
+    } else {
+      incorrectEntries.push(tempPage);
     }
   }
 
-  return total;
+  const sortedIncorrectEntries = incorrectEntries.map((entry) => {
+    return entry.sort((a, b) => {
+      const rulesForEntry = orderRules[a.toString()];
+
+      if (!rulesForEntry) {
+        return 0;
+      }
+
+      return rulesForEntry.find((entry) => entry === b) ? -1 : 1;
+    });
+  });
+
+  const totalPart2 = sortedIncorrectEntries.reduce((acc, entry) => {
+    acc += entry[(entry.length - 1) / 2];
+    return acc;
+  }, 0);
+
+  return { totalPart1, totalPart2 };
 }

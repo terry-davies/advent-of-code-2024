@@ -32,7 +32,15 @@ const example1 = `47|53
 describe('Day 5', () => {
   describe('process string part 1', () => {
     it('should return correct value for string', () => {
-      expect(processStringPart1(example1)).toBe(143);
+      const { totalPart1 } = processStringPart1(example1);
+      expect(totalPart1).toBe(143);
+    });
+  });
+
+  describe('process string part 2', () => {
+    it('should return correct value for string', () => {
+      const { totalPart2 } = processStringPart1(example1);
+      expect(totalPart2).toBe(123);
     });
   });
 });
