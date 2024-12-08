@@ -27,9 +27,40 @@ function parseInput(input: string): {
   return { data: radars, height: rows.length, width: rows[0].length };
 }
 
-export function processPart1(input: string): number {
+function handleRadarPart2(
+  start: [number, number],
+  diff: [number, number],
+  height: number,
+  width: number,
+): Set<string> {
+  let isOutOfBound = false;
+  let antidotePos = [start[0] + diff[0], start[1] + diff[1]];
+  let antidotes = new Set<string>();
+
+  antidotes.add(start.toString());
+
+  while (!isOutOfBound) {
+    if (
+      antidotePos[0] >= 0 &&
+      antidotePos[0] < height &&
+      antidotePos[1] >= 0 &&
+      antidotePos[1] < width
+    ) {
+      antidotes.add(antidotePos.toString());
+    } else {
+      isOutOfBound = true;
+    }
+
+    antidotePos = [antidotePos[0] + diff[0], antidotePos[1] + diff[1]];
+  }
+
+  return antidotes;
+}
+
+export function processPart1(input: string): { part1: number; part2: number } {
   const { data, height, width } = parseInput(input);
   const antidotes = new Set<string>();
+  const antidotesPart2 = new Set<string>();
 
   for (const key in data) {
     const radars = data[key];
@@ -44,8 +75,8 @@ export function processPart1(input: string): number {
         const diffRow = row2 - row1;
         const diffCol = col2 - col1;
 
-        const antidotePos1 = [row1 + diffRow * -1, col1 + diffCol * -1];
-        const antidotePos2 = [row2 + diffRow, col2 + diffCol];
+        let antidotePos1 = [row1 + diffRow * -1, col1 + diffCol * -1];
+        let antidotePos2 = [row2 + diffRow, col2 + diffCol];
 
         if (
           antidotePos1[0] >= 0 &&
@@ -64,9 +95,31 @@ export function processPart1(input: string): number {
         ) {
           antidotes.add(antidotePos2.toString());
         }
+
+        const firstRadarAntidotes = handleRadarPart2(
+          currentRadar,
+          [diffRow * -1, diffCol * -1],
+          height,
+          width,
+        );
+
+        const secondRadarAntidotes = handleRadarPart2(
+          currentRadar,
+          [diffRow, diffCol],
+          height,
+          width,
+        );
+
+        firstRadarAntidotes.forEach((antidote) => {
+          antidotesPart2.add(antidote);
+        });
+
+        secondRadarAntidotes.forEach((antidote) => {
+          antidotesPart2.add(antidote);
+        });
       }
     }
   }
 
-  return antidotes.size;
+  return { part1: antidotes.size, part2: antidotesPart2.size };
 }

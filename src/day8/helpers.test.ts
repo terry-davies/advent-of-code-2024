@@ -16,8 +16,15 @@ const example1 = `............
 describe('Day 7', () => {
   describe('process part 1', () => {
     it('should return correct value for string', () => {
-      const total = processPart1(example1);
-      expect(total).toBe(14);
+      const { part1 } = processPart1(example1);
+      expect(part1).toBe(14);
+    });
+  });
+
+  describe('process part 2', () => {
+    it('should return correct value for string', () => {
+      const { part2 } = processPart1(example1);
+      expect(part2).toBe(34);
     });
   });
 });
