@@ -11,9 +11,10 @@ async function main() {
 
   const input = fetchFileContent(relativePath);
 
-  const total = processStringPart1(input);
+  const { totalPart1, totalPart2 } = processStringPart1(input);
 
-  console.log('Result part 1: ', total);
+  console.log('Result part 1: ', totalPart1);
+  console.log('Result part 2: ', totalPart2);
 }
 
 main();
