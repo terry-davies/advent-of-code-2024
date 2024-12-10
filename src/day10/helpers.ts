@@ -24,12 +24,11 @@ export function processPart1(input: {
 
   for (const peak of input.peaks) {
     let result = walk(input.map, peak);
-    if (result) {
-      count++;
-    }
+    console.log('result', result);
+    count += result;
   }
 
-  return 0;
+  return count;
 }
 
 const directions = [
@@ -43,42 +42,38 @@ function walk(map: number[][], peak: [number, number]) {
   const height = map.length;
   const width = map[0].length;
 
-  let result = false;
+  let foundTrails = new Set<string>();
 
-  while (!result) {
-    let nextDirections = [peak];
-    const tempNextStep = [];
-    for (const direction of directions) {
-      for (const current of nextDirections) {
-        const [x, y] = direction;
-        const next: [number, number] = [current[0] + y, current[1] + x];
+  const isValid = (next: [number, number]) => {
+    const [x, y] = next;
+    const gradient = map[x][y];
 
-        if (
-          next[0] < 0 ||
-          next[0] >= height ||
-          next[1] < 0 ||
-          next[1] >= width
-        ) {
-          continue;
-        }
-
-        const currentVal = map[current[0]][current[1]];
-        const nextVal = map[next[0]][next[1]];
-
-        if (nextVal === 0) {
-          result = true;
-          break;
-        }
-
-        if (nextVal === currentVal - 1) {
-          console.log('current', current, 'next', next);
-          tempNextStep.push(next);
-        }
-      }
-
-      nextDirections = tempNextStep;
+    if (gradient === 0) {
+      console.log('found', next);
+      foundTrails.add(`${next[0]}-${next[1]}`);
+      return;
     }
-  }
 
-  return result;
+    const validDirections = directions
+      .map(([dx, dy]) => {
+        return [x + dx, y + dy] as [number, number];
+      })
+      .filter(([x, y]) => {
+        return (
+          x >= 0 &&
+          x < height &&
+          y >= 0 &&
+          y < width &&
+          map[x][y] === gradient - 1
+        );
+      });
+
+    validDirections.forEach((next) => {
+      isValid(next);
+    });
+  };
+
+  isValid(peak);
+
+  return foundTrails.size;
 }
