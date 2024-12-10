@@ -24,7 +24,6 @@ export function processPart1(input: {
 
   for (const peak of input.peaks) {
     let result = walk(input.map, peak);
-    console.log('result', result);
     count += result;
   }
 
@@ -49,7 +48,6 @@ function walk(map: number[][], peak: [number, number]) {
     const gradient = map[x][y];
 
     if (gradient === 0) {
-      console.log('found', next);
       foundTrails.add(`${next[0]}-${next[1]}`);
       return;
     }
