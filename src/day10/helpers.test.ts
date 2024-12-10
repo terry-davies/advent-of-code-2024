@@ -1,4 +1,4 @@
-import { parseInput, processPart1 } from './helpers';
+import { parseInput, processPart1, processPart2 } from './helpers';
 
 const example1 = [
   `0123
@@ -41,5 +41,13 @@ describe('Day 10', () => {
         expect(total).toBe(expected as number);
       },
     );
+  });
+
+  describe('process part 2', () => {
+    it('should return correct value for string', () => {
+      const input = parseInput(example3[0] as string);
+      const total = processPart2(input);
+      expect(total).toBe(81 as number);
+    });
   });
 });

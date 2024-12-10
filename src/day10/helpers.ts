@@ -23,8 +23,22 @@ export function processPart1(input: {
   let count = 0;
 
   for (const peak of input.peaks) {
-    let result = walk(input.map, peak);
-    count += result;
+    let { part1 } = walk(input.map, peak);
+    count += part1;
+  }
+
+  return count;
+}
+
+export function processPart2(input: {
+  peaks: [number, number][];
+  map: number[][];
+}): number {
+  let count = 0;
+
+  for (const peak of input.peaks) {
+    let { part2 } = walk(input.map, peak);
+    count += part2;
   }
 
   return count;
@@ -42,12 +56,14 @@ function walk(map: number[][], peak: [number, number]) {
   const width = map[0].length;
 
   let foundTrails = new Set<string>();
+  let count = 0;
 
   const isValid = (next: [number, number]) => {
     const [x, y] = next;
     const gradient = map[x][y];
 
     if (gradient === 0) {
+      count++;
       foundTrails.add(`${next[0]}-${next[1]}`);
       return;
     }
@@ -73,5 +89,5 @@ function walk(map: number[][], peak: [number, number]) {
 
   isValid(peak);
 
-  return foundTrails.size;
+  return { part1: foundTrails.size, part2: count };
 }
