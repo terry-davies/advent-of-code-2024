@@ -1,6 +1,6 @@
 import path from 'path';
 import { fetchFileContent } from '@shared/loadInput';
-import { parseInput, processPart1 } from './helpers';
+import { parseInput, processPart1, processPart2 } from './helpers';
 
 const filePath = 'input.txt';
 
@@ -15,7 +15,10 @@ async function main() {
 
   const total = processPart1(parsedInput, 103, 101, 100);
 
+  const part2 = processPart2(parsedInput, 103, 101);
+
   console.log('Result part 1: ', total);
+  console.log('Result part 1: ', part2);
 }
 
 main();
