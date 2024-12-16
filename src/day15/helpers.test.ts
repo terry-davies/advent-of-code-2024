@@ -1,4 +1,4 @@
-import { parseInput, processPart1 } from './helpers';
+import { parseInput, processPart1, processPart2 } from './helpers';
 
 const example1 = `##########
 #..O..O.O#
@@ -28,6 +28,14 @@ describe('Day 15', () => {
       const input = parseInput(example1);
       const total = processPart1(input);
       expect(total).toBe(10092);
+    });
+  });
+
+  describe('process part 2', () => {
+    it('should return correct value for string', () => {
+      const input = parseInput(example1, true);
+      const total = processPart2(input);
+      expect(total).toBe(9021);
     });
   });
 });
