@@ -94,10 +94,19 @@ function cdv(registers: Registers, operand: number) {
   registers.C = Math.floor(numerator / denominator);
 }
 
+const instructionCache = new Map();
+
 function executeInstruction(computer: Computer): boolean {
   const { registers, program, output, instructionPointer } = computer;
 
+  const key = `${instructionPointer}-${registers.A}-${registers.B}-${registers.C}-${output.join(',')}-${program.join(',')}`;
+
+  // if (instructionCache.has(key)) {
+  //   return instructionCache.get(key);
+  // }
+
   if (instructionPointer >= program.length) {
+    instructionCache.set(key, false);
     return false;
   }
 
@@ -117,6 +126,7 @@ function executeInstruction(computer: Computer): boolean {
     case 3:
       if (jnz(registers, operand)) {
         computer.instructionPointer = operand;
+        instructionCache.set(key, true);
         return true;
       }
       break;
@@ -135,10 +145,38 @@ function executeInstruction(computer: Computer): boolean {
   }
 
   computer.instructionPointer += 2;
+  instructionCache.set(key, true);
   return true;
 }
 
 export function processPart1(input: Computer): string {
   while (executeInstruction(input)) {}
   return input.output.join(',');
+}
+
+function comparePrograms(a: Computer, b: Computer): boolean {
+  return a.program.join(',') === b.output.join(',');
+}
+
+export function processPart2(input: Computer): number {
+  const targetOutput = [...input.program].join(',');
+
+  let i = input.registers.A + 1;
+
+  while (true) {
+    const clone = structuredClone(input);
+    console.log(`Trying ${i}`);
+    clone.registers.A = i;
+
+    while (executeInstruction(clone)) {}
+
+    console.log(`Output: ${clone.output.join(',')}`);
+    if (targetOutput === clone.output.join(',')) {
+      break;
+    }
+
+    i++;
+  }
+
+  return i;
 }
