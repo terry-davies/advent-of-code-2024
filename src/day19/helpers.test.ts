@@ -16,7 +16,7 @@ describe('Day 19', () => {
     it('should return correct value for string', () => {
       const input = parseInput(example1);
       const total = processPart1(input);
-      expect(total).toBe(6);
+      expect(total).toBe(16);
     });
   });
 });

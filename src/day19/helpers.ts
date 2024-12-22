@@ -12,14 +12,12 @@ type Input = ReturnType<typeof parseInput>;
 export function processPart1(input: Input): number {
   console.log(input);
 
-  const cache = new Map<string, boolean>();
+  const cache = new Map<string, number>();
 
   let total = 0;
 
   total = input.designs.reduce((acc, design) => {
-    if (walkPattern(design, input.patterns, cache)) {
-      acc++;
-    }
+    acc += walkPattern(design, input.patterns, cache);
 
     return acc;
   }, 0);
@@ -30,30 +28,29 @@ export function processPart1(input: Input): number {
 function walkPattern(
   design: string,
   patterns: string[],
-  cache: Map<string, boolean>,
-): boolean {
+  cache: Map<string, number>,
+): number {
   if (cache.has(design)) {
-    return cache.get(design) as boolean;
+    return cache.get(design) as number;
   }
 
   if (design === '') {
-    return true;
+    return 1;
   }
 
-  let canBeTowel = false;
+  let canBeTowelCount = 0;
 
   for (const pattern of patterns) {
     if (design.startsWith(pattern)) {
       const cloneDesign = design.slice(pattern.length);
 
-      canBeTowel = walkPattern(cloneDesign, patterns, cache);
-      cache.set(cloneDesign, canBeTowel);
-
-      if (canBeTowel) {
-        break;
-      }
+      canBeTowelCount += walkPattern(cloneDesign, patterns, cache);
     }
   }
 
-  return canBeTowel;
+  cache.set(design, canBeTowelCount);
+
+  console.log(design, canBeTowelCount);
+
+  return canBeTowelCount;
 }
